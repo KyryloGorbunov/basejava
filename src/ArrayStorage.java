@@ -4,7 +4,8 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    protected static final int STORAGE_LIMIT = 10000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size;
 
     public void clear() {
@@ -14,44 +15,32 @@ public class ArrayStorage {
 
     public void save(Resume r) {
         if (size < storage.length) {
-            if (size == 0) {
+            if (findIndex(r.uuid) < 0) {
                 storage[size] = r;
                 size++;
             } else {
-                for (int i = 0; i < size; i++) {
-                    if (r.uuid.equals(storage[i].uuid)) {
-                        break;
-                    } else if (i == size - 1) {
-                        storage[size] = r;
-                        size++;
-                    }
-                }
+                System.out.println("Resume is already exist.");
             }
+        } else {
+            System.out.println("Storage is already full");
         }
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].uuid)) {
-                return storage[i];
-            }
+        int index = findIndex(uuid);
+        if (index >= 0) {
+            return storage[index];
         }
         return null;
     }
 
     public void delete(String uuid) {
-        int index = -1;
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].uuid)) {
-                index = i;
-                break;
-            }
-        }
+        int index = findIndex(uuid);
         if (index >= 0) {
-            for (int i = index; i < size - 1; i++) {
-                storage[i] = storage[i + 1];
-            }
+            System.arraycopy(storage, index + 1, storage, index, size);
             size--;
+        } else {
+            System.out.println("Resume not found");
         }
     }
 
@@ -64,5 +53,16 @@ public class ArrayStorage {
 
     public int size() {
         return size;
+    }
+
+    private int findIndex(String uuid) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].uuid)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 }
