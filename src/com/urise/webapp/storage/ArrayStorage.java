@@ -1,3 +1,7 @@
+package com.urise.webapp.storage;
+
+import com.urise.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -15,14 +19,23 @@ public class ArrayStorage {
 
     public void save(Resume r) {
         if (size < storage.length) {
-            if (findIndex(r.uuid) < 0) {
+            if (findIndex(r.getUuid()) < 0) {
                 storage[size] = r;
                 size++;
             } else {
-                System.out.println("Resume is already exist.");
+                System.out.println("ERROR: Resume is already exist.");
             }
         } else {
-            System.out.println("Storage is already full");
+            System.out.println("ERROR: Storage is already full");
+        }
+    }
+
+    public void update (Resume r) {
+        int index = findIndex(r.getUuid());
+        if (index >= 0) {
+            storage[index] = r;
+        } else {
+            System.out.println("ERROR: Resume not found");
         }
     }
 
@@ -30,8 +43,10 @@ public class ArrayStorage {
         int index = findIndex(uuid);
         if (index >= 0) {
             return storage[index];
+        } else {
+            System.out.print("ERROR: Resume not found. ");
+            return null;
         }
-        return null;
     }
 
     public void delete(String uuid) {
@@ -40,7 +55,7 @@ public class ArrayStorage {
             System.arraycopy(storage, index + 1, storage, index, size);
             size--;
         } else {
-            System.out.println("Resume not found");
+            System.out.println("ERROR: Resume not found");
         }
     }
 
@@ -58,7 +73,7 @@ public class ArrayStorage {
     private int findIndex(String uuid) {
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].uuid)) {
+            if (uuid.equals(storage[i].getUuid())) {
                 index = i;
                 break;
             }
