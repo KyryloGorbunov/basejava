@@ -11,8 +11,6 @@ import org.junit.Test;
 public abstract class AbstractArrayStorageTest {
     private final Storage storage;
 
-    private static final int STORAGE_LIMIT = 10000;
-
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
@@ -111,12 +109,12 @@ public abstract class AbstractArrayStorageTest {
     public void saveOverflow() throws Exception {
         storage.clear();
         try {
-            for (int i = 0; i < STORAGE_LIMIT; i++) {
+            for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
                 storage.save(new Resume());
-               //check for double save
-                Assert.assertEquals(storage.size() -1, i);
+                //check for double save
+                Assert.assertEquals(storage.size() - 1, i);
             }
-        } catch (Exception e) {
+        } catch (StorageException e) {
             Assert.fail("StorageException: overflow happened ahead of time");
         }
         storage.save(new Resume());
