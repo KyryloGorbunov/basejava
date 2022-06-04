@@ -120,7 +120,7 @@ public abstract class AbstractArrayStorageTest {
         storage.save(new Resume());
     }
 
-    private void assertSize(int expectedNumber) {
+    protected void assertSize(int expectedNumber) {
         Assert.assertEquals(expectedNumber, storage.size());
     }
 

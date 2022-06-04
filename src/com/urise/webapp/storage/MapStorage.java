@@ -2,11 +2,11 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-public class ListStorage extends AbstractStorage {
+public class MapStorage extends AbstractStorage {
 
-    private final ArrayList<Resume> storage = new ArrayList<>();
+    HashMap<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {
@@ -15,38 +15,35 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected int getSearchKey(String uuid) {
-        Resume r = new Resume(uuid);
-        return storage.indexOf(r);
+        if (storage.containsKey(uuid)) {
+            return 0;
+        }
+        return -1;
     }
 
     @Override
     protected void setResume(Resume r) {
-        storage.set(storage.indexOf(r), r);
+        storage.put(r.getUuid(), r);
     }
 
     @Override
     protected void saveResume(Resume r) {
-        storage.add(r);
+        storage.putIfAbsent(r.getUuid(), r);
     }
 
     @Override
     protected Resume getResume(String uuid) {
-        return storage.get(getSearchKey(uuid));
+        return storage.get(uuid);
     }
 
     @Override
     protected void deleteResume(String uuid) {
-        storage.remove(getSearchKey(uuid));
+        storage.remove(uuid);
     }
-
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
 
     @Override
     public Resume[] getAll() {
-        Resume[] r = new Resume[storage.size()];
-        return (storage.toArray(r));
+        return storage.values().toArray(new Resume[0]);
     }
 
     @Override
@@ -56,7 +53,6 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(String uuid) {
-        Resume r = new Resume(uuid);
-        return storage.contains(r);
+        return storage.containsKey(uuid);
     }
 }
