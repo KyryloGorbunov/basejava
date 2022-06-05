@@ -14,29 +14,33 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected int getSearchKey(String uuid) {
-        Resume r = new Resume(uuid);
-        return storage.indexOf(r);
+    protected Integer getSearchKey(String uuid) {
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return null;
     }
 
     @Override
-    protected void setResume(Resume r) {
-        storage.set(storage.indexOf(r), r);
+    protected void setResume(Resume r, Object searchKey) {
+        storage.set((Integer) searchKey, r);
     }
 
     @Override
-    protected void saveResume(Resume r) {
+    protected void saveResume(Resume r, Object searchKey) {
         storage.add(r);
     }
 
     @Override
-    protected Resume getResume(String uuid) {
-        return storage.get(getSearchKey(uuid));
+    protected Resume getResume(Object searchKey) {
+        return storage.get((Integer) searchKey);
     }
 
     @Override
-    protected void deleteResume(String uuid) {
-        storage.remove(getSearchKey(uuid));
+    protected void deleteResume(Object searchKey) {
+        storage.remove(((Integer) searchKey).intValue());
     }
 
     /**
@@ -44,19 +48,18 @@ public class ListStorage extends AbstractStorage {
      */
 
     @Override
-    public Resume[] getAll() {
-        Resume[] r = new Resume[storage.size()];
-        return (storage.toArray(r));
-    }
-
-    @Override
     public int size() {
         return storage.size();
     }
 
     @Override
-    protected boolean isExist(String uuid) {
-        Resume r = new Resume(uuid);
-        return storage.contains(r);
+    protected boolean isExist(Object searchKey) {
+        return searchKey != null;
+    }
+
+    @Override
+    protected Resume[] getAllSorted() {
+        Resume[] r = new Resume[storage.size()];
+        return (storage.toArray(r));
     }
 }
