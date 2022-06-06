@@ -3,6 +3,7 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class MapStorage extends AbstractStorage {
 
@@ -30,12 +31,12 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected Resume getResume(Object searchKey) {
-        return storage.get(searchKey);
+        return storage.get((String) searchKey);
     }
 
     @Override
     protected void deleteResume(Object searchKey) {
-        storage.remove(searchKey);
+        storage.remove((String) searchKey);
     }
 
     @Override
@@ -45,11 +46,12 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return storage.containsKey(searchKey);
+        return storage.containsKey((String) searchKey);
     }
 
     @Override
     protected Resume[] getAllSorted() {
-        return storage.values().toArray(new Resume[0]);
+        TreeMap<String, Resume> sortedStorage = new TreeMap<>(storage);
+        return sortedStorage.values().toArray(new Resume[0]);
     }
 }

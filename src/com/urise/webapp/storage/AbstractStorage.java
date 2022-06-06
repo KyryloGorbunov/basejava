@@ -24,7 +24,6 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public Resume[] getAll() {
-
         return getAllSorted();
     }
 
