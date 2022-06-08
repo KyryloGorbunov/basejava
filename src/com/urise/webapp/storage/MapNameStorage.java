@@ -2,12 +2,14 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
-public class MapStorage extends AbstractStorage {
+public class MapNameStorage extends AbstractStorage {
 
-    HashMap<String, Resume> storage = new HashMap<>();
+    Map<String[], Resume> storage = new TreeMap<>();
 
     @Override
     public void clear() {
@@ -21,22 +23,22 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void setResume(Resume r, Object searchKey) {
-        storage.put(r.getUuid(), r);
+        storage.put(new String[]{r.getUuid(), r.getFullName()}, r);
     }
 
     @Override
     protected void saveResume(Resume r, Object searchKey) {
-        storage.putIfAbsent(r.getUuid(), r);
+        storage.putIfAbsent(new String[]{r.getUuid(), r.getFullName()}, r);
     }
 
     @Override
     protected Resume getResume(Object searchKey) {
-        return storage.get((String) searchKey);
+        return storage.get((String[]) searchKey);
     }
 
     @Override
     protected void deleteResume(Object searchKey) {
-        storage.remove((String) searchKey);
+        storage.remove((String[]) searchKey);
     }
 
     @Override
@@ -46,12 +48,12 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return storage.containsKey((String) searchKey);
+        return storage.containsKey((String[]) searchKey);
     }
 
     @Override
-    protected Resume[] getAllSorted() {
-        TreeMap<String, Resume> sortedStorage = new TreeMap<>(storage);
-        return sortedStorage.values().toArray(new Resume[0]);
+    public List<Resume> getAllSorted() {
+        List<Resume> storageList = new ArrayList<>(storage.values());
+        return storageList;
     }
 }

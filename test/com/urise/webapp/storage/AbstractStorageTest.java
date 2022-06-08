@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractStorageTest {
     private final Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -17,17 +17,19 @@ public abstract class AbstractArrayStorageTest {
     private static final String UUID_4 = "uuid4";
     private static final String UUID_NOT_EXIST = "null";
 
-    private static final Resume RESUME_1 = new Resume(UUID_1);
-    private static final Resume RESUME_2 = new Resume(UUID_2);
-    private static final Resume RESUME_3 = new Resume(UUID_3);
-    private static final Resume RESUME_4 = new Resume(UUID_4);
+    private static final Resume RESUME_1 = new Resume(UUID_1, "Christopher Bush");
+    private static final Resume RESUME_2 = new Resume(UUID_2, "David Little");
+    private static final Resume RESUME_3 = new Resume(UUID_3, "James Buchanan");
+    private static final Resume RESUME_4 = new Resume(UUID_4, "Frances Russell");
 
     private static final Resume[] EXPECTED_STORAGE = {RESUME_1, RESUME_2, RESUME_3};
     private static final Resume[] EMPTY_STORAGE = {};
 
-    protected AbstractArrayStorageTest(Storage storage) {
+    protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
+
+
 
     @Before
     public void setUp() throws Exception {
@@ -110,14 +112,14 @@ public abstract class AbstractArrayStorageTest {
         storage.clear();
         try {
             for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                storage.save(new Resume());
+                storage.save(new Resume("uuid" + i, "name" + i));
                 //check for double save
                 Assert.assertEquals(storage.size() - 1, i);
             }
         } catch (StorageException e) {
             Assert.fail("StorageException: overflow happened ahead of time");
         }
-        storage.save(new Resume());
+        storage.save(new Resume("uuid", "Frances Russell"));
     }
 
     protected void assertSize(int expectedNumber) {
