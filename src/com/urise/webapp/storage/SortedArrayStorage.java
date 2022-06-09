@@ -33,7 +33,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     protected void deleteResume(Object searchKey) {
         int index = (Integer) searchKey;
-        System.arraycopy(storage, index + 1, storage, index, size);
+        System.arraycopy(storage, index + 1, storage, index, index);
         size--;
     }
 }
