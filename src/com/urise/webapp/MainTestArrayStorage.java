@@ -1,13 +1,13 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.SortedArrayStorage;
+import com.urise.webapp.storage.MapUuidStorage;
 
 /**
  * Test for your ArrayStorage implementation
  */
 public class MainTestArrayStorage {
-    static final SortedArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
+    static final MapUuidStorage ARRAY_STORAGE = new MapUuidStorage();
 
     public static void main(String[] args) {
         Resume r1 = new Resume("uuid1", "Sheila Strickland");
