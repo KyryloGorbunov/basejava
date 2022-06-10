@@ -2,14 +2,13 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
-import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public abstract class AbstractStorageTest {
-    private final Storage storage;
+    protected final Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -29,8 +28,6 @@ public abstract class AbstractStorageTest {
         this.storage = storage;
     }
 
-
-
     @Before
     public void setUp() throws Exception {
         storage.clear();
@@ -44,7 +41,7 @@ public abstract class AbstractStorageTest {
         assertSize(3);
         storage.clear();
         assertSize(0);
-        Assert.assertArrayEquals(EMPTY_STORAGE, storage.getAll());
+        Assert.assertArrayEquals(EMPTY_STORAGE, storage.getAllSorted().toArray());
     }
 
     @Test
@@ -72,14 +69,14 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void delete() throws Exception {
-        Assert.assertEquals(3, storage.getAll().length);
+        Assert.assertEquals(3, storage.getAllSorted().size());
         storage.delete(UUID_1);
-        Assert.assertEquals(2, storage.getAll().length);
+        Assert.assertEquals(2, storage.getAllSorted().size());
     }
 
     @Test
     public void getAll() throws Exception {
-        Assert.assertArrayEquals(EXPECTED_STORAGE, storage.getAll());
+        Assert.assertArrayEquals(EXPECTED_STORAGE, storage.getAllSorted().toArray());
     }
 
     @Test
@@ -107,20 +104,6 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_2);
     }
 
-    @Test(expected = StorageException.class)
-    public void saveOverflow() throws Exception {
-        storage.clear();
-        try {
-            for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                storage.save(new Resume("uuid" + i, "name" + i));
-                //check for double save
-                Assert.assertEquals(storage.size() - 1, i);
-            }
-        } catch (StorageException e) {
-            Assert.fail("StorageException: overflow happened ahead of time");
-        }
-        storage.save(new Resume("uuid", "Frances Russell"));
-    }
 
     protected void assertSize(int expectedNumber) {
         Assert.assertEquals(expectedNumber, storage.size());
