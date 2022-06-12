@@ -19,7 +19,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected Integer getSearchKey(String uuid) {
-        Resume searchKey = new Resume(uuid, null);
+        Resume searchKey = new Resume(uuid, "dummy");
         return Arrays.binarySearch(storage, 0, size, searchKey, RESUME_COMPARATOR);
     }
 
@@ -31,8 +31,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void deleteResume(Object searchKey) {
-        int index = (Integer) searchKey;
+    protected void deleteResume(Integer index) {
         System.arraycopy(storage, index + 1, storage, index, index);
         size--;
     }

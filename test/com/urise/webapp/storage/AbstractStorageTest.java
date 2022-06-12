@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public abstract class AbstractStorageTest {
-    protected final Storage storage;
+    protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -16,10 +16,10 @@ public abstract class AbstractStorageTest {
     private static final String UUID_4 = "uuid4";
     private static final String UUID_NOT_EXIST = "null";
 
-    private static final Resume RESUME_1 = new Resume(UUID_1, "Christopher Bush");
-    private static final Resume RESUME_2 = new Resume(UUID_2, "David Little");
-    private static final Resume RESUME_3 = new Resume(UUID_3, "James Buchanan");
-    private static final Resume RESUME_4 = new Resume(UUID_4, "Frances Russell");
+    private static final Resume RESUME_1 = new Resume(UUID_1, "Name1");
+    private static final Resume RESUME_2 = new Resume(UUID_2, "Name2");
+    private static final Resume RESUME_3 = new Resume(UUID_3, "Name3");
+    private static final Resume RESUME_4 = new Resume(UUID_4, "Name4");
 
     private static final Resume[] EXPECTED_STORAGE = {RESUME_1, RESUME_2, RESUME_3};
     private static final Resume[] EMPTY_STORAGE = {};
@@ -46,10 +46,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        assertSize(3);
-        storage.update(storage.get(UUID_3));
-        Assert.assertSame(RESUME_3, storage.get(UUID_3));
-        assertSize(3);
+        Resume newResume = new Resume(UUID_1, "New Name");
+        storage.update(newResume);
+        Assert.assertSame(newResume, storage.get(UUID_1));
     }
 
     @Test
@@ -75,7 +74,7 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() throws Exception {
+    public void getAllSorted() throws Exception {
         Assert.assertArrayEquals(EXPECTED_STORAGE, storage.getAllSorted().toArray());
     }
 
@@ -110,6 +109,6 @@ public abstract class AbstractStorageTest {
     }
 
     private void assertGet(Resume expectedResume) {
-        Assert.assertEquals(expectedResume, storage.get(expectedResume.toString()));
+        Assert.assertEquals(expectedResume, storage.get(expectedResume.getUuid()));
     }
 }

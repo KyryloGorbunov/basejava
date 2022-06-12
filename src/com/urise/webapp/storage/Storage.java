@@ -15,6 +15,10 @@ public interface Storage {
 
     void delete(String uuid);
 
+    /**
+     * @return array, contains only Resumes in storage (without null)
+     */
+
     List<Resume> getAllSorted();
 
     int size();

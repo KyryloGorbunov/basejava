@@ -4,7 +4,7 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapResumeStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage<Resume> {
 
     HashMap<String, Resume> storage = new HashMap<>();
 
@@ -19,23 +19,23 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected void setResume(Resume r, Object searchKey) {
+    protected void setResume(Resume r, Resume resume) {
         storage.put(r.getUuid(), r);
     }
 
     @Override
-    protected void saveResume(Resume r, Object searchKey) {
-        storage.putIfAbsent(r.getUuid(), r);
+    protected void saveResume(Resume r, Resume resume) {
+        storage.put(r.getUuid(), r);
     }
 
     @Override
-    protected Resume getResume(Object searchKey) {
-        return storage.get(((Resume) searchKey).getUuid());
+    protected Resume getResume(Resume resume) {
+        return resume;
     }
 
     @Override
-    protected void deleteResume(Object searchKey) {
-        storage.remove(((Resume) searchKey).getUuid());
+    protected void deleteResume(Resume resume) {
+        storage.remove(resume.getUuid());
     }
 
     @Override
@@ -44,13 +44,12 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return storage.containsValue((Resume) searchKey);
+    protected boolean isExist(Resume resume) {
+        return storage.containsValue(resume);
     }
 
     @Override
     public List<Resume> doCopyAll() {
-        List<Resume> storageList = new ArrayList<>(storage.values());
-        return storageList;
+        return new ArrayList<>(storage.values());
     }
 }
