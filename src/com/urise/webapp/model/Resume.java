@@ -1,12 +1,15 @@
 package com.urise.webapp.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import com.urise.webapp.model.ResumeFields.AbstractSection;
+import com.urise.webapp.model.ResumeFields.ContactType;
+import com.urise.webapp.model.ResumeFields.SectionType;
+
+import java.util.*;
 
 /**
  * Initial resume class
  */
-public class Resume implements Comparable<Resume> {
+public class Resume implements Comparable<Resume>{
 
     // Unique identifier
     private final String uuid;
@@ -27,6 +30,13 @@ public class Resume implements Comparable<Resume> {
     public String getUuid() {
         return uuid;
     }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public Map<ContactType, String> contactMap = new LinkedHashMap<>();
+    public Map<SectionType, AbstractSection> sectionMap = new LinkedHashMap<>();
 
     @Override
     public boolean equals(Object o) {
