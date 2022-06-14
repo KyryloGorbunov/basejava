@@ -1,8 +1,6 @@
 package com.urise.webapp.model;
 
-import com.urise.webapp.model.ResumeFields.AbstractSection;
-import com.urise.webapp.model.ResumeFields.ContactType;
-import com.urise.webapp.model.ResumeFields.SectionType;
+import com.urise.webapp.model.ResumeFields.*;
 
 import java.util.*;
 
@@ -35,8 +33,11 @@ public class Resume implements Comparable<Resume>{
         return fullName;
     }
 
-    public Map<ContactType, String> contactMap = new LinkedHashMap<>();
-    public Map<SectionType, AbstractSection> sectionMap = new LinkedHashMap<>();
+    public ContactTypeString contactTypeString = new ContactTypeString();
+
+    public SectionString sectionString = new SectionString();
+    public SectionList sectionList = new SectionList();
+    public SectionMap sectionMap = new SectionMap();
 
     @Override
     public boolean equals(Object o) {

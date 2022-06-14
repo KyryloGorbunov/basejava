@@ -4,17 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SectionString extends AbstractSection<String> {
-    private String field;
 
-    public Map<SectionType, String> sectionMap = new HashMap<>();
+    Map<SectionType, String> map = new HashMap<>();
 
-    public SectionString(String field) {
-        this.field = field;
+    public void save(SectionType sectionType, String string) {
+        map.put(sectionType, string);
     }
 
-    @Override
-    public String toString() {
-        return field;
+    public void getSectionType() {
+        for (Map.Entry<SectionType, String> item : map.entrySet()) {
+            System.out.println(item.getKey() + ":\n" + item.getValue());
+        }
     }
-
 }
