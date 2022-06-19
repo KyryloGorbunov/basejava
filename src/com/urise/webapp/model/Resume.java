@@ -14,6 +14,9 @@ public class Resume implements Comparable<Resume>{
 
     private final String fullName;
 
+    public Map<ContactType, String> contactFields = new LinkedHashMap<>();
+    public Map<SectionType, AbstractSection> sectionFields = new LinkedHashMap<>();
+
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
@@ -32,12 +35,6 @@ public class Resume implements Comparable<Resume>{
     public String getFullName() {
         return fullName;
     }
-
-    public ContactTypeString contactTypeString = new ContactTypeString();
-
-    public SectionString sectionString = new SectionString();
-    public SectionList sectionList = new SectionList();
-    public SectionMap sectionMap = new SectionMap();
 
     @Override
     public boolean equals(Object o) {
