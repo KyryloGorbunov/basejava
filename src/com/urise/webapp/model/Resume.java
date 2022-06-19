@@ -1,13 +1,11 @@
 package com.urise.webapp.model;
 
-import com.urise.webapp.model.ResumeFields.*;
-
 import java.util.*;
 
 /**
  * Initial resume class
  */
-public class Resume implements Comparable<Resume>{
+public class Resume implements Comparable<Resume> {
 
     // Unique identifier
     private final String uuid;
