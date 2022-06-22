@@ -2,19 +2,17 @@ package com.urise.webapp.model;
 
 import com.urise.webapp.util.DateUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Organization {
     private final Link homepage;
     private final Period period;
-    private final List<Period> periods = new ArrayList<>();
+    private final Map<Link, Period> periods = new HashMap<>();
 
     public Organization(String name, String url, DateUtil startDate, DateUtil endDate, String title, String description) {
         this.homepage = new Link(name, url);
         this.period = new Period(startDate, endDate, title, description);
-        periods.add(period);
+        periods.put(homepage, period);
     }
 
     public Link getHomepage() {
