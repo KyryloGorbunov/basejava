@@ -12,8 +12,8 @@ public class Resume implements Comparable<Resume> {
 
     private final String fullName;
 
-    public Map<ContactType, String> contactFields = new LinkedHashMap<>();
-    public Map<SectionType, AbstractSection> sectionFields = new LinkedHashMap<>();
+    public Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    public Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -34,6 +34,14 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public Section getSection(SectionType type) {
+        return sections.get(type);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,13 +59,13 @@ public class Resume implements Comparable<Resume> {
     }
 
     @Override
-    public int compareTo(Resume o) {
-        int cmp = fullName.compareTo(o.fullName);
-        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
+    public String toString() {
+        return uuid + '(' + fullName + ')';
     }
 
     @Override
-    public String toString() {
-        return uuid + '(' + fullName + ')';
+    public int compareTo(Resume o) {
+        int cmp = fullName.compareTo(o.fullName);
+        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
 }

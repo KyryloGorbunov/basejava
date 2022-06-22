@@ -1,36 +1,28 @@
 package com.urise.webapp.model;
 
+import com.urise.webapp.util.DateUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Organization {
-
-    private final String name;
-    private final String website;
+    private final Link homepage;
+    private final Period period;
     private final List<Period> periods = new ArrayList<>();
 
-    public Organization(String name, String website, Period period) {
-        this.name = name;
-        this.website = website;
+    public Organization(String name, String url, DateUtil startDate, DateUtil endDate, String title, String description) {
+        this.homepage = new Link(name, url);
+        this.period = new Period(startDate, endDate, title, description);
         periods.add(period);
     }
 
-    public List<Period> getPeriods() {
-        return periods;
+    public Link getHomepage() {
+        return homepage;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    @Override
-    public String toString() {
-        return '\n' + name + ' ' + website + ' ' + periods;
+    public String getPeriods() {
+        return periods.toString();
     }
 
     @Override
@@ -38,11 +30,20 @@ public class Organization {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
-        return Objects.equals(name, that.name) && Objects.equals(website, that.website) && Objects.equals(periods, that.periods);
+        return homepage.equals(that.homepage) && period.equals(that.period);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, website, periods);
+        return Objects.hash(homepage, period);
+    }
+
+    @Override
+    public String toString() {
+        return "Organization{" +
+                "homepage=" + homepage +
+                ", period=" + period +
+                '}';
     }
 }
+

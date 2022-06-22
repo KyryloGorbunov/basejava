@@ -1,7 +1,9 @@
 package com.urise.webapp.model;
 
 public enum ContactType {
-    PHONE("Phone number"),
+    PHONE("Work phone"),
+    MOBILE("Mobile phone"),
+    HOME_PHONE("Home phone"),
     SKYPE("Skype"),
     EMAIL("Email"),
     LINKEDIN("LinkedIn"),
