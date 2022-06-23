@@ -1,17 +1,16 @@
 package com.urise.webapp.model;
 
-import com.urise.webapp.util.DateUtil;
-
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Period {
 
-    private final DateUtil startDate;
-    private final DateUtil endDate;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
     private final String position;
     private final String description;
 
-    public Period(DateUtil startDate, DateUtil endDate, String position, String description) {
+    public Period(LocalDate startDate, LocalDate endDate, String position, String description) {
         Objects.requireNonNull(startDate, "startDate must not be null");
         Objects.requireNonNull(endDate, "endDate must not be null");
         Objects.requireNonNull(position, "title must not be null");
@@ -21,11 +20,11 @@ public class Period {
         this.description = description;
     }
 
-    public DateUtil getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public DateUtil getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
@@ -52,11 +51,8 @@ public class Period {
 
     @Override
     public String toString() {
-        return "Period{" +
-                "startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", position='" + position + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return startDate + " - " + endDate +
+                "\n" + position +
+                "\n" + description;
     }
 }
