@@ -10,26 +10,25 @@ import java.util.List;
 import java.util.Map;
 
 public class ResumeDataTest {
-
     private static final String PHONE = "+7(921) 855-0482";
+
     private static final String SKYPE = "skype:grigory.kislin";
     private static final String EMAIL = "gkislin@yandex.ru";
     private static final String LINKEDIN = "https://www.linkedin.com/in/gkislin";
     private static final String GITHUB = "https://github.com/gkislin";
     private static final String STACKOVERFLOW = "\"https://stackoverflow.com/users/548473/grigory-kislin\"";
     private static final String PAGE = "http://gkislin.ru/";
-
     private static final TextSection OBJECTIVE = new TextSection("Ведущий стажировок и корпоративного обучения по Java Web и " +
             "Enterprise технологиям");
+
     private static final TextSection PERSONAL = new TextSection("Аналитический склад ума, сильная логика, креативность, " +
             "инициативность. Пурист кода и архитектуры.");
-
     private static final List<String> STRINGS_ACHIEVEMENT = new ArrayList<>();
+
     private static final ListSection ACHIEVEMENT = new ListSection(STRINGS_ACHIEVEMENT);
-
     private static final List<String> STRINGS_QUALIFICATION = new ArrayList<>();
-    private static final ListSection QUALIFICATION = new ListSection(STRINGS_QUALIFICATION);
 
+    private static final ListSection QUALIFICATION = new ListSection(STRINGS_QUALIFICATION);
     private static final Organization ORGANIZATION_EXPERIENCE_1 = new Organization("Java Online Projects",
             "https://www.https://javaops.ru/.com/", DateUtil.of(2013, Month.NOVEMBER), LocalDate.now(),
             "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.)");
@@ -41,8 +40,8 @@ public class ResumeDataTest {
             "авторизация по OAuth1, OAuth2, JWT SSO.");
 
     private static final List<Organization> EXPERIENCE_LIST = new ArrayList<>();
-    private static final OrganizationSection EXPERIENCE = new OrganizationSection(EXPERIENCE_LIST);
 
+    private static final OrganizationSection EXPERIENCE = new OrganizationSection(EXPERIENCE_LIST);
     private static final Organization ORGANIZATION_EDUCATION_1 = new Organization("Coursera",
             "https://www.coursera.org/learn/scala-functional-programming", DateUtil.of(2013, Month.MARCH),
             DateUtil.of(2013, Month.MAY), "'Functional Programming Principles in Scala' by Martin Odersky", null);
@@ -51,17 +50,18 @@ public class ResumeDataTest {
             "https://ibs-training.ru/kurs/obektno-orientirovannyy_analiz_i_proektirovanie_na_uml.html",
             DateUtil.of(2011, Month.MARCH), DateUtil.of(2011, Month.APRIL), "Курс 'Объектно-ориентированный" +
             " анализ ИС. Концептуальное моделирование на UML.'", null);
+
     private static final Organization ORGANIZATION_EDUCATION_3 = new Organization("Luxoft",
             "https://ibs-training.ru/kurs/obektno-orientirovannyy_analiz_i_proektirovanie_na_uml.html",
             DateUtil.of(2013, Month.MARCH), DateUtil.of(2015, Month.APRIL), "Курс 'Объектно-ориентированный" +
             " анализ ИС. Концептуальное моделирование на UML.'", null);
 
-
     private static final List<Organization> EDUCATION_LIST = new ArrayList<>();
+
     private static final OrganizationSection EDUCATION = new OrganizationSection(EDUCATION_LIST);
 
-    public static void main(String[] args) {
-        Resume resume1 = new Resume("Григорий Кислин");
+    public Resume getResume(String uuid, String fullName) {
+        Resume resume1 = new Resume(uuid, fullName);
         System.out.println(resume1.getFullName());
 
         resume1.contacts.put(ContactType.PHONE, PHONE);
@@ -107,5 +107,11 @@ public class ResumeDataTest {
         for (Map.Entry<SectionType, Section> item : resume1.sections.entrySet()) {
             System.out.println(item.getKey() + ": " + item.getValue());
         }
+        return resume1;
+    }
+
+    public static void main(String[] args) {
+        ResumeDataTest resumeDataTest = new ResumeDataTest();
+        resumeDataTest.getResume("uuid", "Григорий Кислин");
     }
 }

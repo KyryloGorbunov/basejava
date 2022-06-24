@@ -5,12 +5,12 @@ import com.urise.webapp.model.Resume;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private final File directory;
-    private int size;
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must be null");
@@ -49,13 +49,20 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume getResume(File file) {
-        doReed(file);
-        return null;
+        Resume resume;
+        try {
+            resume = doRead(file);
+        } catch (Exception e) {
+            throw new StorageException("IO error", file.getName(), e);
+        }
+        return resume;
     }
 
     @Override
     protected void deleteResume(File file) {
-        doDelete(file);
+        if (!file.delete()) {
+            throw new StorageException("File has not been deleted", file.getName());
+        }
     }
 
     @Override
@@ -65,35 +72,41 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doCopyAll() {
+        List<Resume> resumes = new ArrayList<>();
         File[] files = directory.listFiles();
-        for (File file : Objects.requireNonNull(files)) {
-            getResume(file);
+        if (files == null) {
+            throw new StorageException("Directory is empty", directory.getName());
         }
-        return null;
+        for (File file : Objects.requireNonNull(files)) {
+           resumes.add(getResume(file));
+        }
+        return resumes;
     }
 
     @Override
     public void clear() {
         File[] files = directory.listFiles();
-        for (File file : Objects.requireNonNull(files)) {
-            deleteResume(file);
+        if (files == null) {
+            throw new StorageException("Directory is empty", directory.getName());
+        } else {
+            for (File file : Objects.requireNonNull(files)) {
+                deleteResume(file);
+            }
         }
     }
 
     @Override
     public int size() {
         File[] files = directory.listFiles();
-        for (File file : Objects.requireNonNull(files)) {
-            if (file.isFile()) {
-                size++;
-            }
+        if (files == null) {
+            throw new StorageException("Directory is empty", directory.getName());
         }
-        return size;
+        return files.length;
     }
 
     protected abstract void doWrite(Resume r, File file) throws IOException;
 
-    protected abstract void doReed(File file);
+    protected abstract Resume doRead(File file);
 
     protected abstract void doDelete(File file);
 }
