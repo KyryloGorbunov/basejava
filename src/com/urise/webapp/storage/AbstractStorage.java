@@ -15,13 +15,13 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     protected abstract SK getSearchKey(String uuid);
 
-    protected abstract void setResume(Resume r, SK searchKey);
+    protected abstract void doUpdate(Resume r, SK searchKey);
 
-    protected abstract void saveResume(Resume r, SK searchKey);
+    protected abstract void doSave(Resume r, SK searchKey);
 
-    protected abstract Resume getResume(SK searchKey);
+    protected abstract Resume doGet(SK searchKey);
 
-    protected abstract void deleteResume(SK searchKey);
+    protected abstract void doDelete(SK searchKey);
 
     protected abstract boolean isExist(SK searchKey);
 
@@ -30,26 +30,26 @@ public abstract class AbstractStorage<SK> implements Storage {
     public final void update(Resume r) {
         LOG.info("Update " + r);
         SK searchKey = getExistingSearchKey(r.getUuid());
-        setResume(r, searchKey);
+        doUpdate(r, searchKey);
         System.out.println("Resume " + r + " successfully updated.");
     }
 
     public final void save(Resume r) {
         LOG.info("Save " + r);
         SK searchKey = getNotExistingSearchKey(r.getUuid());
-        saveResume(r, searchKey);
+        doSave(r, searchKey);
     }
 
     public final Resume get(String uuid) {
         LOG.info("Get " + uuid);
         SK searchKey = getExistingSearchKey(uuid);
-        return getResume(searchKey);
+        return doGet(searchKey);
     }
 
     public final void delete(String uuid) {
         LOG.info("Delete " + uuid);
         SK searchKey = getExistingSearchKey(uuid);
-        deleteResume(searchKey);
+        doDelete(searchKey);
     }
 
     public List<Resume> getAllSorted() {
