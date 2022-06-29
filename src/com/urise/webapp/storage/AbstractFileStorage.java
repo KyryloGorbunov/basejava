@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public abstract class AbstractFileStorage extends AbstractStorage<File> implements IOStrategy{
     private final File directory;
 
     protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
@@ -54,7 +54,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected Resume doGet(File file) {
         try {
             return doRead(new BufferedInputStream(new FileInputStream(file)));
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new StorageException("File read error", file.getName(), e);
         }
     }

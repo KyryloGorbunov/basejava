@@ -5,15 +5,15 @@ import com.urise.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage extends AbstractFileStorage{
+public class ObjectStreamPathStorage extends AbstractPathStorage {
 
-    protected ObjectStreamStorage(File directory) {
-        super(directory);
+    protected ObjectStreamPathStorage(String dir) {
+        super(dir);
     }
 
     @Override
     protected void doWrite(Resume r, OutputStream os) throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(os)){
+        try (ObjectOutputStream oos = new ObjectOutputStream(os)) {
             oos.writeObject(r);
         }
     }
@@ -29,9 +29,11 @@ public class ObjectStreamStorage extends AbstractFileStorage{
 
     @Override
     public void write(ObjectOutputStream oss) {
+
     }
 
     @Override
     public void read(ObjectInputStream ois) {
+
     }
 }

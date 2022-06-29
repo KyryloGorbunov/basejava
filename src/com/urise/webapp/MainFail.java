@@ -15,8 +15,9 @@ public class MainFail {
                         System.out.println(file.getName());
                         recursiveRound(file);
                     } else {
-                        System.out.println(file.getName());
+                        System.out.println(" " + file.getName());
                     }
+
                 }
             }
         }
