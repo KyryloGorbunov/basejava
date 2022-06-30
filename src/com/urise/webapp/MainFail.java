@@ -3,26 +3,27 @@ package com.urise.webapp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 
 public class MainFail {
 
-    private static void recursiveRound(File rootFile) {
-        if (rootFile.isDirectory()) {
-            File[] directoryFiles = rootFile.listFiles();
-            if (directoryFiles != null) {
-                for (File file : directoryFiles) {
-                    if (file.isDirectory()) {
-                        System.out.println(file.getName());
-                        recursiveRound(file);
-                    } else {
-                        System.out.println(" " + file.getName());
-                    }
+    static String repeat(int n, String value) {
+        return new String(new char[n]).replace("\0", value);
+    }
 
+    static void doRecurs(File dir, int level) {
+        final String indent = repeat(level, "   ");
+
+        if (dir.isDirectory()) {
+            File[] list = dir.listFiles();
+            if (list == null)
+                return;
+
+            for (File name : list) {
+                if (name.isFile()) {
+                    System.out.println(indent + name.getName());
+                } else {
+                    System.out.println(indent + name.getName());
+                    doRecurs(name, level + 1);
                 }
             }
         }
@@ -38,7 +39,7 @@ public class MainFail {
             throw new RuntimeException("Error", e);
         }
 
-        File dir = new File("./src/com/urise/webapp");
+        File dir = new File("./src");
         System.out.println(dir.isDirectory());
         String[] list = dir.list();
         if (list != null) {
@@ -52,39 +53,8 @@ public class MainFail {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         System.out.println();
-        recursiveRound(dir);
 
-        System.out.println("------------------------------------------------------------------");
-
-        Path path = dir.toPath();
-        try {
-            Files.walkFileTree(path, new FileVisitor<>() {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    System.out.println(dir.getFileName());
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    System.out.println(" " + file.getFileName());
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                    return FileVisitResult.TERMINATE;
-                }
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        doRecurs(dir, 0);
     }
 }
