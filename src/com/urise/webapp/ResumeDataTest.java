@@ -64,7 +64,7 @@ public class ResumeDataTest {
         resume1.contacts.put(ContactType.LINKEDIN, LINKEDIN);
         resume1.contacts.put(ContactType.GITHUB, GITHUB);
         resume1.contacts.put(ContactType.STACKOVERFLOW, STACKOVERFLOW);
-        resume1.contacts.put(ContactType.PAGE, PAGE);
+        resume1.contacts.put(ContactType.HOME_PAGE, PAGE);
 
         resume1.sections.put(SectionType.OBJECTIVE, OBJECTIVE);
         resume1.sections.put(SectionType.PERSONAL, PERSONAL);
