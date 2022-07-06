@@ -4,27 +4,48 @@ import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.time.Month;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 
 public class DataStreamSerializer implements StreamSerializer {
+
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
-            dos.writeUTF(r.getUuid());
-            dos.writeUTF(r.getFullName());
-            Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            }
-            Map<SectionType, Section> sections = r.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue().toString());
-            }
+
+            writeWithException(dos, r.getContacts().entrySet(), writer -> {
+                dos.writeUTF(writer.getKey().name());
+                dos.writeUTF(writer.getValue());
+            });
+
+            writeWithException(dos, r.getSections().entrySet(), writer -> {
+                if (writer.getValue() instanceof TextSection) {
+                    dos.writeUTF(writer.getKey().name());
+                    dos.writeUTF(((TextSection) writer.getValue()).getText());
+                }
+                if (writer.getValue() instanceof ListSection) {
+                    dos.writeUTF(writer.getKey().name());
+                    for (String string : ((ListSection) writer.getValue()).getStrings()) {
+                        dos.writeUTF(string);
+                    }
+                }
+                if (writer.getValue() instanceof OrganizationSection) {
+                    dos.writeUTF(writer.getKey().name());
+                    for (Organization organization : ((OrganizationSection) writer.getValue()).getOrganizations()) {
+                        dos.writeUTF(organization.getHomePage().getName());
+                        if (organization.getHomePage().getUrl() != null) {
+                            dos.writeUTF(organization.getHomePage().getUrl());
+                        }
+                        for (Organization.Period period : organization.getListPeriods()) {
+                            dos.writeUTF(period.getStartDate().toString());
+                            dos.writeUTF(period.getEndDate().toString());
+                            dos.writeUTF(period.getPosition());
+                            if (period.getDescription() != null) {
+                                dos.writeUTF(period.getDescription());
+                            }
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -38,18 +59,27 @@ public class DataStreamSerializer implements StreamSerializer {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            int sizeSections = dis.readInt();
-            for (int i = 0; i < sizeSections; i++) {
-                SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                TextSection textSection = new TextSection(dis.readUTF());
-                ListSection listSection = new ListSection(dis.readUTF());
-                OrganizationSection organizationSection = new OrganizationSection(new Organization(new Link(dis.readUTF(), dis.readUTF()),
-                        (List<Organization.Period>) new Organization.Period(dis.readInt() , Month.of(dis.readInt()), dis.readUTF(), dis.readUTF())));
-             resume.addSection(sectionType, textSection);
-             resume.addSection(sectionType, listSection);
-             resume.addSection(sectionType, organizationSection);
+            int sizeS = dis.readInt();
+            for (int i = 0; i < sizeS; i++) {
+                resume.addSection(SectionType.valueOf(dis.readUTF()), (new TextSection(dis.readUTF())));
+                resume.addSection(SectionType.valueOf(dis.readUTF()), (new ListSection(dis.readUTF())));
+                resume.addSection(SectionType.valueOf(dis.readUTF()), (new OrganizationSection(new Organization(
+                        dis.readUTF(), dis.readUTF(), new Organization.Period(Integer.parseInt(dis.readUTF()), Month.of(Integer.parseInt(dis.readUTF())),
+                        dis.readUTF(), dis.readUTF())))));
             }
             return resume;
         }
     }
+
+    private <T> void writeWithException(DataOutputStream dos, Collection<T> collection, WriteCollection<T> write)
+            throws IOException {
+        dos.writeInt(collection.size());
+        for (T t : collection) {
+            write.write(t);
+        }
+    }
+}
+
+interface WriteCollection<T> {
+    void write(T t) throws IOException;
 }

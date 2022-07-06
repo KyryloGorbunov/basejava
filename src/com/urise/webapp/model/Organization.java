@@ -44,6 +44,10 @@ public class Organization implements Serializable {
         return periods.toString();
     }
 
+    public List<Period> getListPeriods() {
+        return periods;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
