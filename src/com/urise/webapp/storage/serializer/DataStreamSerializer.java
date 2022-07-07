@@ -4,20 +4,30 @@ import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class DataStreamSerializer implements StreamSerializer {
 
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
+            dos.writeUTF(r.getUuid());
+            dos.writeUTF(r.getFullName());
 
-            writeWithException(dos, r.getContacts().entrySet(), writer -> {
+            Map<ContactType, String> contacts = r.getContacts();
+
+            writeWithException(dos, contacts.entrySet(), writer -> {
                 dos.writeUTF(writer.getKey().name());
                 dos.writeUTF(writer.getValue());
             });
 
-            writeWithException(dos, r.getSections().entrySet(), writer -> {
+            Map<SectionType, Section> sections = r.getSections();
+
+            writeWithException(dos, sections.entrySet(), writer -> {
+
                 if (writer.getValue() instanceof TextSection) {
                     dos.writeUTF(writer.getKey().name());
                     dos.writeUTF(((TextSection) writer.getValue()).getText());
@@ -32,14 +42,18 @@ public class DataStreamSerializer implements StreamSerializer {
                     dos.writeUTF(writer.getKey().name());
                     for (Organization organization : ((OrganizationSection) writer.getValue()).getOrganizations()) {
                         dos.writeUTF(organization.getHomePage().getName());
-                        if (organization.getHomePage().getUrl() != null) {
+                        if (organization.getHomePage().getUrl() == null) {
+                            dos.writeUTF("null");
+                        } else {
                             dos.writeUTF(organization.getHomePage().getUrl());
                         }
                         for (Organization.Period period : organization.getListPeriods()) {
                             dos.writeUTF(period.getStartDate().toString());
                             dos.writeUTF(period.getEndDate().toString());
                             dos.writeUTF(period.getPosition());
-                            if (period.getDescription() != null) {
+                            if (period.getDescription() == null) {
+                                dos.writeUTF("null");
+                            } else {
                                 dos.writeUTF(period.getDescription());
                             }
                         }
@@ -55,18 +69,12 @@ public class DataStreamSerializer implements StreamSerializer {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            int sizeS = dis.readInt();
-            for (int i = 0; i < sizeS; i++) {
-                resume.addSection(SectionType.valueOf(dis.readUTF()), (new TextSection(dis.readUTF())));
-                resume.addSection(SectionType.valueOf(dis.readUTF()), (new ListSection(dis.readUTF())));
-                resume.addSection(SectionType.valueOf(dis.readUTF()), (new OrganizationSection(new Organization(
-                        dis.readUTF(), dis.readUTF(), new Organization.Period(Integer.parseInt(dis.readUTF()), Month.of(Integer.parseInt(dis.readUTF())),
-                        dis.readUTF(), dis.readUTF())))));
-            }
+
+            readWithException(dis, resume.getContacts().entrySet(), reader ->
+                    resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+
+            readWithException(dis, resume.getSections().entrySet(), reader ->
+                    resume.addSection(SectionType.valueOf(dis.readUTF()), readSection(reader.getValue(), dis)));
             return resume;
         }
     }
@@ -78,8 +86,59 @@ public class DataStreamSerializer implements StreamSerializer {
             write.write(t);
         }
     }
+
+    private <T> void readWithException(DataInputStream dis, Collection<T> collection, ReadCollection<T> read)
+            throws IOException {
+        dis.readInt();
+        for (T t : collection) {
+            read.read(t);
+        }
+    }
+
+    private Section readSection(Object object, DataInputStream dis) throws IOException {
+        Section section = null;
+        
+        if (object instanceof TextSection) {
+          section = new TextSection(dis.readUTF());
+        }
+        if (object instanceof ListSection) {
+           section =  new ListSection(dis.readUTF());
+        }
+        if (object instanceof OrganizationSection) {
+          section = new OrganizationSection(readOrganizationSection(dis, object));
+        }
+        return section;
+    }
+
+    private List<Organization> readOrganizationSection(DataInputStream dis, Object object) throws IOException {
+        List<Organization> organizations = new ArrayList<>();
+        if (object instanceof Organization) {
+            
+            Link link = new Link(dis.readUTF(), dis.readUTF());
+            if (link.getUrl().equals("null")) {
+                link.setUrl(null);
+            }
+            
+            Organization.Period period = new Organization.Period(dis.readInt(), Month.of(dis.readInt()), dis.readUTF(), dis.readUTF());
+            if (period.getDescription().equals("null")) {
+                period.setDescription(null);
+            }
+
+            List<Organization.Period> periods = new ArrayList<>();
+            periods.add(period);
+            
+            Organization organization = new Organization(link, periods);
+            
+            organizations.add(organization);
+        }
+        return organizations;
+    }
 }
 
 interface WriteCollection<T> {
     void write(T t) throws IOException;
+}
+
+interface ReadCollection<T> {
+    void read(T t) throws IOException;
 }
