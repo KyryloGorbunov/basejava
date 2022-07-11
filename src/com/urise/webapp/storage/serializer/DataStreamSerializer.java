@@ -27,34 +27,27 @@ public class DataStreamSerializer implements StreamSerializer {
             Map<SectionType, Section> sections = r.getSections();
 
             writeWithException(dos, sections.entrySet(), writer -> {
-
-                if (writer.getValue() instanceof TextSection) {
-                    dos.writeUTF(writer.getKey().name());
-                    dos.writeUTF(((TextSection) writer.getValue()).getText());
-                }
-                if (writer.getValue() instanceof ListSection) {
-                    dos.writeUTF(writer.getKey().name());
-                    for (String string : ((ListSection) writer.getValue()).getStrings()) {
-                        dos.writeUTF(string);
+                switch (writer.getKey()) {
+                    case PERSONAL, OBJECTIVE -> {
+                        dos.writeUTF(writer.getKey().name());
+                        dos.writeUTF(((TextSection) writer.getValue()).getText());
                     }
-                }
-                if (writer.getValue() instanceof OrganizationSection) {
-                    dos.writeUTF(writer.getKey().name());
-                    for (Organization organization : ((OrganizationSection) writer.getValue()).getOrganizations()) {
-                        dos.writeUTF(organization.getHomePage().getName());
-                        if (organization.getHomePage().getUrl() == null) {
-                            dos.writeUTF("null");
-                        } else {
-                            dos.writeUTF(organization.getHomePage().getUrl());
+                    case ACHIEVEMENT, QUALIFICATIONS -> {
+                        dos.writeUTF(writer.getKey().name());
+                        for (String string : ((ListSection) writer.getValue()).getStrings()) {
+                            dos.writeUTF(string);
                         }
-                        for (Organization.Period period : organization.getListPeriods()) {
-                            dos.writeUTF(period.getStartDate().toString());
-                            dos.writeUTF(period.getEndDate().toString());
-                            dos.writeUTF(period.getPosition());
-                            if (period.getDescription() == null) {
-                                dos.writeUTF("null");
-                            } else {
-                                dos.writeUTF(period.getDescription());
+                    }
+                    case EXPERIENCE, EDUCATION -> {
+                        dos.writeUTF(writer.getKey().name());
+                        for (Organization organization : ((OrganizationSection) writer.getValue()).getOrganizations()) {
+                            dos.writeUTF(organization.getHomePage().getName());
+                            dos.writeUTF(organization.getHomePage().getUrl() == null ? "null" : organization.getHomePage().getUrl());
+                            for (Organization.Period period : organization.getListPeriods()) {
+                                dos.writeUTF(period.getStartDate().toString());
+                                dos.writeUTF(period.getEndDate().toString());
+                                dos.writeUTF(period.getPosition());
+                                dos.writeUTF(period.getDescription() == null ? "null" : period.getDescription());
                             }
                         }
                     }
@@ -97,15 +90,15 @@ public class DataStreamSerializer implements StreamSerializer {
 
     private Section readSection(Object object, DataInputStream dis) throws IOException {
         Section section = null;
-        
+
         if (object instanceof TextSection) {
-          section = new TextSection(dis.readUTF());
+            section = new TextSection(dis.readUTF());
         }
         if (object instanceof ListSection) {
-           section =  new ListSection(dis.readUTF());
+            section = new ListSection(dis.readUTF());
         }
         if (object instanceof OrganizationSection) {
-          section = new OrganizationSection(readOrganizationSection(dis, object));
+            section = new OrganizationSection(readOrganizationSection(dis, object));
         }
         return section;
     }
@@ -113,12 +106,12 @@ public class DataStreamSerializer implements StreamSerializer {
     private List<Organization> readOrganizationSection(DataInputStream dis, Object object) throws IOException {
         List<Organization> organizations = new ArrayList<>();
         if (object instanceof Organization) {
-            
+
             Link link = new Link(dis.readUTF(), dis.readUTF());
             if (link.getUrl().equals("null")) {
                 link.setUrl(null);
             }
-            
+
             Organization.Period period = new Organization.Period(dis.readInt(), Month.of(dis.readInt()), dis.readUTF(), dis.readUTF());
             if (period.getDescription().equals("null")) {
                 period.setDescription(null);
@@ -126,9 +119,9 @@ public class DataStreamSerializer implements StreamSerializer {
 
             List<Organization.Period> periods = new ArrayList<>();
             periods.add(period);
-            
+
             Organization organization = new Organization(link, periods);
-            
+
             organizations.add(organization);
         }
         return organizations;
