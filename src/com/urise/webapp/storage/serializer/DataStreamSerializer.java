@@ -44,15 +44,6 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private void writeLocalDate(DataOutputStream dos, LocalDate ld) throws IOException {
-        dos.writeInt(ld.getYear());
-        dos.writeInt(ld.getMonth().getValue());
-    }
-
-    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
-        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
-    }
-
     @Override
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
@@ -76,9 +67,7 @@ public class DataStreamSerializer implements StreamSerializer {
                     readList(dis, () -> new Organization(
                             new Link(dis.readUTF(), dis.readUTF()),
                             readList(dis, () -> new Organization.Period(
-                                    readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()
-                            ))
-                    )));
+                                    readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF())))));
         };
     }
 
@@ -89,18 +78,6 @@ public class DataStreamSerializer implements StreamSerializer {
             list.add(reader.read());
         }
         return list;
-    }
-
-    private interface ElementProcessor {
-        void process() throws IOException;
-    }
-
-    private interface ElementReader<T> {
-        T read() throws IOException;
-    }
-
-    private interface ElementWriter<T> {
-        void write(T t) throws IOException;
     }
 
     private void readItems(DataInputStream dis, ElementProcessor processor) throws IOException {
@@ -116,125 +93,26 @@ public class DataStreamSerializer implements StreamSerializer {
             writer.write(item);
         }
     }
-}
 
-//    @Override
-//    public void doWrite(Resume r, OutputStream os) throws IOException {
-//        try (DataOutputStream dos = new DataOutputStream(os)) {
-//            dos.writeUTF(r.getUuid());
-//            dos.writeUTF(r.getFullName());
-//
-//            Map<ContactType, String> contacts = r.getContacts();
-//
-//            writeWithException(dos, contacts.entrySet(), writer -> {
-//                dos.writeUTF(writer.getKey().name());
-//                dos.writeUTF(writer.getValue());
-//            });
-//
-//            writeWithException(dos, r.getSections().entrySet(), writer -> {
-//                SectionType type = writer.getKey();
-//                Section section = writer.getValue();
-//                dos.writeUTF(type.name());
-//                switch (type) {
-//                    case PERSONAL, OBJECTIVE -> {
-//                        dos.writeUTF(((TextSection) section).getText());
-//                    }
-//                    case ACHIEVEMENT, QUALIFICATIONS -> {
-//                        for (String string : ((ListSection) section).getStrings()) {
-//                            dos.writeUTF(string);
-//                        }
-//                    }
-//                    case EXPERIENCE, EDUCATION -> {
-//                        for (Organization organization : ((OrganizationSection) section).getOrganizations()) {
-//                            dos.writeUTF(organization.getHomePage().getName());
-//                            dos.writeUTF(organization.getHomePage().getUrl());
-//                            for (Organization.Period period : organization.getListPeriods()) {
-//                                writeLocalDate(dos, period.getStartDate());
-//                                writeLocalDate(dos, period.getEndDate());
-//                                dos.writeUTF(period.getPosition());
-//                                dos.writeUTF(period.getDescription());
-//                            }
-//                        }
-//                    }
-//                    default -> throw new IllegalStateException("Unexpected value: " + type);
-//                }
-//            });
-//        }
-//    }
-//
-//    private void writeLocalDate(DataOutputStream dos, LocalDate ld) throws IOException {
-//        dos.writeInt(ld.getYear());
-//        dos.writeInt(ld.getMonth().getValue());
-//    }
-//
-//    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
-//        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
-//    }
-//
-//    @Override
-//    public Resume doRead(InputStream is) throws IOException {
-//        try (DataInputStream dis = new DataInputStream(is)) {
-//            String uuid = dis.readUTF();
-//            String fullName = dis.readUTF();
-//            Resume resume = new Resume(uuid, fullName);
-//            readWithException(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
-//            readWithException(dis, () -> {
-//                SectionType sectionType = SectionType.valueOf(dis.readUTF());
-//                resume.addSection(sectionType, readSection(sectionType, dis));
-//            });
-//            return resume;
-//        }
-//    }
-//
-//    private <T> void writeWithException(DataOutputStream dos, Collection<T> collection, WriteCollection<T> write)
-//            throws IOException {
-//        dos.writeInt(collection.size());
-//        for (T t : collection) {
-//            write.write(t);
-//        }
-//    }
-//
-//    private Section readSection(SectionType sectionType, DataInputStream dis) throws IOException {
-//
-//        return switch (sectionType) {
-//            case PERSONAL, OBJECTIVE -> new TextSection(dis.readUTF());
-//            case ACHIEVEMENT, QUALIFICATIONS -> new ListSection(readList(dis, dis::readUTF));
-//            case EXPERIENCE, EDUCATION -> new OrganizationSection(
-//                    readList(dis, () -> new Organization(
-//                            new Link(dis.readUTF(), dis.readUTF()),
-//                            readList(dis, () -> new Organization.Period(
-//                                    readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()
-//                            ))
-//                    )));
-//        };
-//    }
-//
-//    private <T> List<T> readList(DataInputStream dis, ReadCollection<T> readCollection) throws IOException {
-//        int size = dis.readInt();
-//        List<T> list = new ArrayList<>(size);
-//        for (int i = 0; i < size; i++) {
-//            list.add(readCollection.read());
-//        }
-//        return list;
-//    }
-//
-//    private void readWithException(DataInputStream dis, ReadIterator readIterator) throws IOException {
-//        int size = dis.readInt();
-//        for (int i = 0; i < size; i++) {
-//            readIterator.readWithIterator();
-//        }
-//    }
-//}
-//
-//interface WriteCollection<T> {
-//    void write(T t) throws IOException;
-//}
-//
-//interface ReadCollection<T> {
-//    T read() throws IOException;
-//}
-//
-//interface ReadIterator {
-//    void readWithIterator() throws IOException;
-//}
+    private void writeLocalDate(DataOutputStream dos, LocalDate ld) throws IOException {
+        dos.writeInt(ld.getYear());
+        dos.writeInt(ld.getMonth().getValue());
+    }
+
+    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+    }
+
+    private interface ElementProcessor {
+        void process() throws IOException;
+    }
+
+    private interface ElementReader<T> {
+        T read() throws IOException;
+    }
+
+    private interface ElementWriter<T> {
+        void write(T t) throws IOException;
+    }
+}
 

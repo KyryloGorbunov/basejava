@@ -3,7 +3,6 @@ package com.urise.webapp;
 import com.urise.webapp.model.*;
 import com.urise.webapp.util.DateUtil;
 
-import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class ResumeDataTest {
     private static final ListSection QUALIFICATION = new ListSection(STRINGS_QUALIFICATION);
 
     private static final Organization ORGANIZATION_EXPERIENCE_1 = new Organization("Java Online Projects",
-            "https://www.https://javaops.ru/.com/", new Organization.Period(DateUtil.of(2013, Month.NOVEMBER), LocalDate.now(),
+            "https://www.https://javaops.ru/.com/", new Organization.Period(DateUtil.of(2013, Month.NOVEMBER), DateUtil.NOW,
             "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.)"));
 
     private static final Organization ORGANIZATION_EXPERIENCE_2 = new Organization("Wrike",
