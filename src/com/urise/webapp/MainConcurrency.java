@@ -75,7 +75,6 @@ class DeadLockDemo {
     public static final Object LOCK_1 = new Object();
     public static final Object LOCK_2 = new Object();
 
-
     public static void main(String[] args) {
         DeadThreadOne threadOne = new DeadThreadOne();
         DeadThreadTwo threadTwo = new DeadThreadTwo();
@@ -89,11 +88,8 @@ class DeadLockDemo {
         public void run() {
             synchronized (LOCK_1) {
                 System.out.println("DeadThreadOne is holding Lock 1...");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                DeadLockDemo deadLockDemo = new DeadLockDemo();
+                deadLockDemo.sleepThread();
                 System.out.println("DeadThreadOne is waiting for Lock 2...");
                 synchronized (LOCK_2) {
                     System.out.println("DeadThreadOne  is holding Lock 1 and Lock 2...");
@@ -106,17 +102,22 @@ class DeadLockDemo {
 
         public void run() {
             synchronized (LOCK_2) {
-                System.out.println("DeadThreadTwo is holding LOCK 2...");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                System.out.println("DeadThreadTwo is holding Lock 2...");
+                DeadLockDemo deadLockDemo = new DeadLockDemo();
+                deadLockDemo.sleepThread();
                 System.out.println("DeadThreadTwo is waiting for Lock 1...");
                 synchronized (LOCK_1) {
-                    System.out.println("DeadThreadOne  is holding Lock 1 and Lock 2...");
+                    System.out.println("DeadThreadTwo  is holding Lock 1 and Lock 2...");
                 }
             }
+        }
+    }
+
+    private void sleepThread() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
