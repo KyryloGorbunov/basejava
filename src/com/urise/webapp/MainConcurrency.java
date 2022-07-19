@@ -86,38 +86,31 @@ class DeadLockDemo {
     private static class DeadThreadOne extends Thread {
 
         public void run() {
-            synchronized (LOCK_1) {
-                System.out.println("DeadThreadOne is holding Lock 1...");
-                DeadLockDemo deadLockDemo = new DeadLockDemo();
-                deadLockDemo.sleepThread();
-                System.out.println("DeadThreadOne is waiting for Lock 2...");
-                synchronized (LOCK_2) {
-                    System.out.println("DeadThreadOne  is holding Lock 1 and Lock 2...");
-                }
-            }
+            DeadLockDemo deadLockDemo = new DeadLockDemo();
+            deadLockDemo.doRun(LOCK_1, LOCK_2);
         }
     }
 
     private static class DeadThreadTwo extends Thread {
 
         public void run() {
-            synchronized (LOCK_2) {
-                System.out.println("DeadThreadTwo is holding Lock 2...");
-                DeadLockDemo deadLockDemo = new DeadLockDemo();
-                deadLockDemo.sleepThread();
-                System.out.println("DeadThreadTwo is waiting for Lock 1...");
-                synchronized (LOCK_1) {
-                    System.out.println("DeadThreadTwo  is holding Lock 1 and Lock 2...");
-                }
-            }
+            DeadLockDemo deadLockDemo = new DeadLockDemo();
+            deadLockDemo.doRun(LOCK_2, LOCK_1);
         }
     }
 
-    private void sleepThread() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void doRun(Object lock1, Object lock2) {
+        synchronized (lock1) {
+            System.out.println(Thread.currentThread().getName() + " is holding " + lock1);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getName() + " is waiting " + lock2);
+            synchronized (lock2) {
+                System.out.println(Thread.currentThread().getName() + " is holding Lock 1 and Lock 2...");
+            }
         }
     }
 }
