@@ -86,20 +86,18 @@ class DeadLockDemo {
     private static class DeadThreadOne extends Thread {
 
         public void run() {
-            DeadLockDemo deadLockDemo = new DeadLockDemo();
-            deadLockDemo.doRun(LOCK_1, LOCK_2);
+            doRun(LOCK_1, LOCK_2);
         }
     }
 
     private static class DeadThreadTwo extends Thread {
 
         public void run() {
-            DeadLockDemo deadLockDemo = new DeadLockDemo();
-            deadLockDemo.doRun(LOCK_2, LOCK_1);
+            doRun(LOCK_2, LOCK_1);
         }
     }
 
-    private void doRun(Object lock1, Object lock2) {
+    private static void doRun(Object lock1, Object lock2) {
         synchronized (lock1) {
             System.out.println(Thread.currentThread().getName() + " is holding " + lock1);
             try {
