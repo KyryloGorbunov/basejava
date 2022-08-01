@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.UUID;
 
 public abstract class AbstractStorageTest {
 
@@ -16,11 +17,11 @@ public abstract class AbstractStorageTest {
 
     protected Storage storage;
 
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
-    private static final String UUID_NOT_EXIST = "null";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
+    private static final String UUID_NOT_EXIST = UUID.randomUUID().toString();
 
 //    private static final ResumeDataTest RESUME = new ResumeDataTest();
 //    private static final Resume R_1 = RESUME.getResume(UUID_1, "Name1");

@@ -21,12 +21,17 @@ public class SqlHelper {
 
     public <T> T executeQuery(String request, SqlProcessor<T> sqlProcessor) {
         try (Connection conn = connectionFactory.getConnection();
-        PreparedStatement ps = conn.prepareStatement(request)) {
+             PreparedStatement ps = conn.prepareStatement(request)) {
             return sqlProcessor.executeQuery(ps);
-        } catch (PSQLException e) {
-            throw new ExistStorageException(e);
         } catch (SQLException e) {
-            throw new StorageException(e);
+            if (e instanceof PSQLException) {
+                if (e.getSQLState().equals("23505")) {
+                    throw new ExistStorageException((PSQLException) e);
+                }
+            } else {
+                throw new StorageException(e);
+            }
         }
+        return null;
     }
 }
