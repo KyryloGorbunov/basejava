@@ -118,32 +118,32 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> resumes = new ArrayList<>();
-//        sqlHelper.execute("SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name", ps -> {
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                Resume resume = new Resume(rs.getString("uuid"), rs.getString("full_name"));
-//                while (rs.next()) {
-//                    resume.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
-//                }
-//                resumes.add(resume);
-//            }
-//            return resumes;
-//        });
-//        return resumes;
-
-        sqlHelper.execute("SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name",
-                ps -> {
-                    ResultSet rs = ps.executeQuery();
-                    while (rs.next()) {
-                        Resume r = new Resume(rs.getString("uuid"), rs.getString("full_name"));
-                        String value = rs.getString("value");
-                        ContactType type = ContactType.valueOf(rs.getString("type"));
-                        r.addContact(type, value);
-                        resumes.add(r);
-                    }
-                    return resumes;
-                });
+        sqlHelper.execute("SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name", ps -> {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Resume resume = new Resume(rs.getString("uuid"), rs.getString("full_name"));
+                while (rs.next()) {
+                    resume.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                }
+                resumes.add(resume);
+            }
+            return resumes;
+        });
         return resumes;
+
+//        sqlHelper.execute("SELECT * FROM resume r LEFT JOIN contact c ON r.uuid = c.resume_uuid ORDER BY full_name",
+//                ps -> {
+//                    ResultSet rs = ps.executeQuery();
+//                    while (rs.next()) {
+//                        Resume r = new Resume(rs.getString("uuid"), rs.getString("full_name"));
+//                        String value = rs.getString("value");
+//                        ContactType type = ContactType.valueOf(rs.getString("type"));
+//                        r.addContact(type, value);
+//                        resumes.add(r);
+//                    }
+//                    return resumes;
+//                });
+//        return resumes;
     }
 
     @Override
