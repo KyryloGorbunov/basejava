@@ -99,8 +99,8 @@ public class ResumeDataTest {
         return resume1;
     }
 //
-//    public static void main(String[] args) {
-//        ResumeDataTest resumeDataTest = new ResumeDataTest();
-//        resumeDataTest.getResume("uuid", "Григорий Кислин");
-//    }
+    public static void main(String[] args) {
+        ResumeDataTest resumeDataTest = new ResumeDataTest();
+        resumeDataTest.getResume("uuid", "Григорий Кислин");
+    }
 }
