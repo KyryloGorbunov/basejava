@@ -1,5 +1,7 @@
 package com.urise.webapp.web;
 
+import com.urise.webapp.model.Resume;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
@@ -13,6 +15,7 @@ public class ResumeServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         String name = request.getParameter("name");
         response.getWriter().write(name == null ? "Hello Resumes!" : "Hello " + name + '!');
+        response.getWriter().write(String.valueOf(new Resume("uuid", "Kyrylo")));
     }
 
     @Override
