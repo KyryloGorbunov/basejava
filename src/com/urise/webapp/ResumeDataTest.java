@@ -66,19 +66,19 @@ public class ResumeDataTest {
         resume1.sections.put(SectionType.OBJECTIVE, OBJECTIVE);
         resume1.sections.put(SectionType.PERSONAL, PERSONAL);
 
-        STRINGS_ACHIEVEMENT.add("\nОрганизация команды и успешная реализация Java проектов для сторонних заказчиков: " +
+        STRINGS_ACHIEVEMENT.add("Организация команды и успешная реализация Java проектов для сторонних заказчиков: " +
                 "приложения автопарк на стеке Spring Cloud/микросервисы, система мониторинга показателей спортсменов на" +
                 " Spring Boot, участие в проекте МЭШ на Play-2, многомодульный Spring Boot + Vaadin проект для " +
                 "комплексных DIY смет");
-        STRINGS_ACHIEVEMENT.add("\nС 2013 года: разработка проектов Разработка Web приложения,Java Enterprise," +
+        STRINGS_ACHIEVEMENT.add("С 2013 года: разработка проектов Разработка Web приложения,Java Enterprise," +
                 " Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). " +
                 "Удаленное взаимодействие (JMS/AKKA). Организация онлайн стажировок и ведение проектов." +
                 " Более 3500 выпускников.");
         resume1.sections.put(SectionType.ACHIEVEMENT, ACHIEVEMENT);
 
-        STRINGS_QUALIFICATION.add("\nJEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
-        STRINGS_QUALIFICATION.add("\nVersion control: Subversion, Git, Mercury, ClearCase, Perforce");
-        STRINGS_QUALIFICATION.add("\nDB: PostgresSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, " +
+        STRINGS_QUALIFICATION.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
+        STRINGS_QUALIFICATION.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
+        STRINGS_QUALIFICATION.add("DB: PostgresSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle, " +
                 "MySQL, SQLite, MS SQL, HSQLDB");
         resume1.sections.put(SectionType.QUALIFICATIONS, QUALIFICATION);
 //

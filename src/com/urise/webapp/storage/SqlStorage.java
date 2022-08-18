@@ -5,15 +5,17 @@ import com.urise.webapp.model.*;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     public SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -166,9 +168,8 @@ public class SqlStorage implements Storage {
                     ps.setString(3, ((TextSection) section).getText());
                 }
                 if (type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS) {
-                    for (String string : ((ListSection) section).getStrings()) {
-                        ps.setString(3, string + "\n");
-                    }
+                    String joined = String.join("\n", ((ListSection) section).getStrings());
+                    ps.setString(3, joined);
                 }
                 ps.addBatch();
             }
@@ -209,7 +210,9 @@ public class SqlStorage implements Storage {
                 resume.addSection(type, new TextSection(value));
             }
             if (type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS) {
-                resume.addSection(type, new ListSection(value + "\n"));
+                String[] sbrStr = value.split("\\r?\\n");
+                List<String> strings = new ArrayList<>(Arrays.asList(sbrStr));
+                resume.addSection(type, new ListSection(strings));
             }
         }
     }
