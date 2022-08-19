@@ -1,6 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.ResumeDataTest;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
@@ -10,30 +9,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.UUID;
+
+import static com.urise.webapp.TestData.*;
 
 public abstract class AbstractStorageTest {
 
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
 
     protected Storage storage;
-
-    private static final String UUID_1 = UUID.randomUUID().toString();
-    private static final String UUID_2 = UUID.randomUUID().toString();
-    private static final String UUID_3 = UUID.randomUUID().toString();
-    private static final String UUID_4 = UUID.randomUUID().toString();
-    private static final String UUID_NOT_EXIST = UUID.randomUUID().toString();
-
-    private static final ResumeDataTest RESUME = new ResumeDataTest();
-    private static final Resume R_1 = RESUME.getResume(UUID_1, "Name1");
-    private static final Resume R_2 = RESUME.getResume(UUID_2, "Name2");
-    private static final Resume R_3 = RESUME.getResume(UUID_3, "Name3");
-    private static final Resume R_4 = RESUME.getResume(UUID_4, "Name4");
-
-//    private static final Resume R_1 = new Resume(UUID_1, "Name1");
-//    private static final Resume R_2 = new Resume(UUID_2, "Name2");
-//    private static final Resume R_3 = new Resume(UUID_3, "Name3");
-//    private static final Resume R_4 = new Resume(UUID_4, "Name4");
 
     private static final Resume[] EXPECTED_STORAGE = {R_1, R_2, R_3};
     private static final Resume[] EMPTY_STORAGE = {};
