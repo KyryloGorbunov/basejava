@@ -17,9 +17,12 @@
             <th>Email</th>
             <th></th>
             <th></th>
+            <div class="add-resume">
+                <a href="resume?uuid=${resume.uuid}&action=add"><img src="img/add-person.png"></a>
+            </div>
         </tr>
         <c:forEach items="${resumes}" var="resume">
-            <jsp:useBean id="resume" scope="request" class="com.urise.webapp.model.Resume"/>
+            <jsp:useBean id="resume" type="com.urise.webapp.model.Resume"/>
             <tr>
                 <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
                 <td><%=EMAIL.toHtml(resume.getContact(EMAIL))%></td>

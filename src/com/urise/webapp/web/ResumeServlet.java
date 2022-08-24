@@ -1,7 +1,6 @@
 package com.urise.webapp.web;
 
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
 import com.urise.webapp.util.Config;
 
@@ -11,6 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -36,6 +38,17 @@ public class ResumeServlet extends HttpServlet {
                 r.getContacts().remove(type);
             }
         }
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            if (type == SectionType.PERSONAL || type == SectionType.OBJECTIVE) {
+                r.addSection(type, new TextSection(value));
+            }
+            if (type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS) {
+                String[] sbrStr = value.split("\\r?\\n");
+                List<String> strings = new ArrayList<>(Arrays.asList(sbrStr));
+                r.addSection(type, new ListSection(strings));
+            }
+        }
         storage.update(r);
         response.sendRedirect("resume");
     }
@@ -57,6 +70,10 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 r = storage.get(uuid);
+                break;
+            case "add":
+                r = new Resume("");
+                storage.save(r);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
