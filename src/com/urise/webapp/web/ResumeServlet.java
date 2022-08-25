@@ -41,12 +41,22 @@ public class ResumeServlet extends HttpServlet {
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
             if (type == SectionType.PERSONAL || type == SectionType.OBJECTIVE) {
-                r.addSection(type, new TextSection(value));
+                if (value != null && value.trim().length() != 0) {
+                    r.addSection(type, new TextSection(value));
+                }
+                else {
+                    r.getSections().remove(type);
+                }
             }
             if (type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS) {
                 String[] sbrStr = value.split("\\r?\\n");
                 List<String> strings = new ArrayList<>(Arrays.asList(sbrStr));
-                r.addSection(type, new ListSection(strings));
+                if (value != null && value.trim().length() != 0) {
+                    r.addSection(type, new ListSection(strings));
+                }
+                else {
+                    r.getSections().remove(type);
+                }
             }
         }
         storage.update(r);
