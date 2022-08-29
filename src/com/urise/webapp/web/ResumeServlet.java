@@ -10,9 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -49,10 +46,8 @@ public class ResumeServlet extends HttpServlet {
                 }
             }
             if (type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS) {
-                String[] sbrStr = value.split("\\r?\\n");
-                List<String> strings = new ArrayList<>(Arrays.asList(sbrStr));
                 if (value != null && value.trim().length() != 0) {
-                    r.addSection(type, new ListSection(strings));
+                    r.addSection(type, new ListSection(value.split("\\n")));
                 }
                 else {
                     r.getSections().remove(type);
@@ -83,7 +78,6 @@ public class ResumeServlet extends HttpServlet {
                 break;
             case "add":
                 r = new Resume("");
-                storage.save(r);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
