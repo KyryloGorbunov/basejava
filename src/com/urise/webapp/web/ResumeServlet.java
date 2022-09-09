@@ -43,7 +43,7 @@ public class ResumeServlet extends HttpServlet {
             if (HtmlUtil.isEmpty(value)) {
                 r.getContacts().remove(type);
             } else {
-                r.addContact(type, value);
+                r.addContact(type, value.trim());
             }
         }
         for (SectionType type : SectionType.values()) {
@@ -59,7 +59,15 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        r.addSection(type, new ListSection(value.split("\\n")));
+                        List<String> listSection = new ArrayList<>();
+                        for (String str : value.split("\\n")) {
+                            if (HtmlUtil.isEmpty(str)) {
+                                listSection.remove(str);
+                            } else {
+                                listSection.add(str);
+                            }
+                        }
+                        r.addSection(type, new ListSection(listSection));
                         break;
                     case EDUCATION:
                     case EXPERIENCE:

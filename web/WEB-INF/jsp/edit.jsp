@@ -19,7 +19,7 @@
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Name:</dt>
-            <dd><input type="text" pattern="^[a-zA-Z][a-zA-Z0-9-_\.\s]{1,20}$" required name="fullName" size=50
+            <dd><input type="text" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$?" required name="fullName" size=50
                        value="${resume.fullName}"></dd>
         </dl>
         <h2>Контакты:</h2>
