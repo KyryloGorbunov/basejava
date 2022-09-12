@@ -6,6 +6,6 @@
         </div>
     </a>
     <a class="text-anchor" href="resume?theme=${theme == null ? 'light' : theme}">
-        <span class="resumes-control-title">Управление резюме</span>
+        <span class="resumes-control-title">Resume management</span>
     </a>
 </div>

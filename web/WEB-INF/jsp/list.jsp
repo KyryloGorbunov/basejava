@@ -8,17 +8,17 @@
     <link rel="stylesheet" href="css/theme/${theme}.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/resume-list-styles.css">
-    <title>Список всех резюме</title>
+    <title>List of all resumes</title>
 </head>
 <body>
 <div class="themes">
-    <div class="theme-title">Тема</div>
+    <div class="theme-title">Theme</div>
     <div class="theme-selector">
         <form action="" method="GET">
             <select name="theme" onchange="this.form.submit()">
-                <option value="light" ${theme == null || theme == 'light' ? 'selected' : ''}>Светлая</option>
-                <option value="dark" ${theme == 'dark' ? 'selected' : ''}>Темная</option>
-                <option value="purple" ${theme == 'purple' ? 'selected' : ''}>Фиолетовая</option>
+                <option value="light" ${theme == null || theme == 'light' ? 'selected' : ''}>Light</option>
+                <option value="dark" ${theme == 'dark' ? 'selected' : ''}>Dark</option>
+                <option value="purple" ${theme == 'purple' ? 'selected' : ''}>Purple</option>
             </select>
         </form>
     </div>
@@ -31,16 +31,16 @@
                 <img src="img/${theme}/add-person.svg" alt="">
             </a>
             <a class="text-anchor" href="resume?action=add&theme=${theme}">
-                <p class="add-resume-title">Добавить резюме</p>
+                <p class="add-resume-title">Add resume</p>
             </a>
         </div>
         <div class="resumes-list">
             <table>
                 <tr class="t-header">
-                    <th class="name-column">Имя</th>
-                    <th class="info-column">Контакты</th>
-                    <th class="img-column">Редактировать</th>
-                    <th class="img-column">Удалить</th>
+                    <th class="name-column">Name</th>
+                    <th class="info-column">Contacts</th>
+                    <th class="img-column">Edit</th>
+                    <th class="img-column">Delete</th>
                 </tr>
                 <c:forEach items="${resumes}" var="resume">
                     <jsp:useBean id="resume" type="com.urise.webapp.model.Resume"/>

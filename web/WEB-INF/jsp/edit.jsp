@@ -21,10 +21,10 @@
     <input type="hidden" name="theme" value="${theme}">
     <div class="scrollable-panel">
         <div class="form-wrapper">
-            <div class="section">ФИО</div>
-            <input class="field" type="text" name="fullName" size=55 placeholder="ФИО" value="${resume.fullName}" required>
+            <div class="section">Full name</div>
+            <input class="field" type="text" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$?" name="fullName" size=55 placeholder="Full name" value="${resume.fullName}" required>
 
-            <div class="section">Контакты</div>
+            <div class="section">Contacts</div>
 
             <c:forEach var="type" items="<%=ContactType.values()%>">
                 <input class="field" type="text" name="${type.name()}" size=30 placeholder="${type.title}"
@@ -33,7 +33,7 @@
 
             <div class="spacer"></div>
 
-            <div class="section">Секции</div>
+            <div class="section">Sections</div>
 
             <c:forEach var="type" items="<%=SectionType.values()%>">
                 <c:set var="section" value="${resume.getSection(type)}"/>
@@ -56,33 +56,36 @@
                                 </c:otherwise>
                             </c:choose>
 
-                            <%--                            <button class="green-button">Добавить</button>--%>
+<%--                                                        <button class="green-button">Add</button>--%>
 
-                            <input class="field" type="text" placeholder="Название" name='${type}' size=100 value="${org.homePage.name}">
-                            <input class="field" type="text" placeholder="Ссылка" name='${type}url' size=100 value="${org.homePage.url}">
+                            <input class="field" type="text" placeholder="Name" name='${type}' size=100 value="${org.homePage.name}">
+                            <input class="field" type="text" placeholder="Link" name='${type}url' size=100 value="${org.homePage.url}">
 
-                            <%--                            <button class="small-green-button">Добавить должность</button>--%>
+<%--                                                        <button class="small-green-button">Add position</button>--%>
 
                             <c:forEach var="pos" items="${org.periods}">
                                 <jsp:useBean id="pos" type="com.urise.webapp.model.Organization.Period"/>
 
                                 <div class="date-section">
                                     <input class="field date" name="${type}${counter.index}startDate"
-                                           placeholder="Начало, ММ/ГГГГ"
+                                           placeholder="Start date, MM/YYYY"
                                            size=10
                                            value="<%=DateUtil.format(pos.getStartDate())%>">
                                     <input class="field date date-margin" name="${type}${counter.index}endDate"
-                                           placeholder="Окончание, ММ/ГГГГ"
+                                           placeholder="End date, MM/YYYY"
                                            size=10
                                            value="<%=DateUtil.format(pos.getEndDate())%>">
                                 </div>
 
-                                <input class="field" type="text" placeholder="Заголовок"
+                                <input class="field" type="text" placeholder="Header"
                                        name='${type}${counter.index}title' size=75
                                        value="${pos.position}">
-                                <textarea class="field" placeholder="Описание" name="${type}${counter.index}description">${pos.description}</textarea>
+                                <textarea class="field" placeholder="Description" name="${type}${counter.index}description">${pos.description}</textarea>
 
                             </c:forEach>
+
+                            <button class="green-button">Add</button>
+
                         </c:forEach>
                     </c:when>
                 </c:choose>
@@ -91,8 +94,8 @@
             <div class="spacer"></div>
 
             <div class="button-section">
-                <button class="red-cancel-button" onclick="window.history.back()">Отменить</button>
-                <button class="green-submit-button" type="submit">Сохранить</button>
+                <button class="red-cancel-button" onclick="window.history.back()">Cancel</button>
+                <button class="green-submit-button" type="submit">Save</button>
             </div>
 
         </div>

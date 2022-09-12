@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/view-resume-styles.css">
     <jsp:useBean id="resume" type="com.urise.webapp.model.Resume" scope="request"/>
-    <title>Резюме ${resume.fullName}</title>
+    <title>Resume ${resume.fullName}</title>
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
