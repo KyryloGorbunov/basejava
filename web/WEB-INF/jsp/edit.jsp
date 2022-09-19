@@ -94,7 +94,7 @@
             <div class="spacer"></div>
 
             <div class="button-section">
-                <button class="red-cancel-button" onclick="window.history.back()">Cancel</button>
+                <button class="red-cancel-button" type="reset" onclick="window.history.back()">Cancel</button>
                 <button class="green-submit-button" type="submit">Save</button>
             </div>
 

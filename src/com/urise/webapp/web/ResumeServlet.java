@@ -45,6 +45,7 @@ public class ResumeServlet extends HttpServlet {
         if (isCreate) {
             r = new Resume(fullName);
         } else {
+            Config.get().checkImmutable(uuid);
             r = storage.get(uuid);
             r.setFullName(fullName);
         }
@@ -126,8 +127,9 @@ public class ResumeServlet extends HttpServlet {
         Resume r;
         switch (action) {
             case "delete":
+                Config.get().checkImmutable(uuid);
                 storage.delete(uuid);
-                response.sendRedirect("resume");
+                response.sendRedirect("resume?theme=" + getTheme(request));
                 return;
             case "view":
                 r = storage.get(uuid);
