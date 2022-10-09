@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage<Resume> {
 
-    HashMap<String, Resume> storage = new HashMap<>();
+    Map<String, Resume> storage = new HashMap<>();
 
     @Override
     public void clear() {

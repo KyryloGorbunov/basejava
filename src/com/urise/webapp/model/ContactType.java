@@ -1,9 +1,8 @@
 package com.urise.webapp.model;
 
 public enum ContactType {
-    PHONE("Work phone"),
-    MOBILE("Mobile phone"),
-    HOME_PHONE("Home phone"),
+    PHONE("Phone"),
+    ADDRESS("Address"),
     SKYPE("Skype") {
         @Override
         public String toHtml0(String value) {
